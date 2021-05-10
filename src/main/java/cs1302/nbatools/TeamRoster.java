@@ -7,11 +7,11 @@ import java.util.LinkedList;
  *
  */
 public class TeamRoster {
-	
+       
     private LinkedList<NBAPlayer> playerList = new LinkedList<NBAPlayer>();
     private String rosterName;
     private String teamNickName;
-	
+       
     /**
      * Default Constructor. Sets {@code rosterName} to "none".
      *
@@ -19,7 +19,7 @@ public class TeamRoster {
     public TeamRoster() {
         this.rosterName = "none";
     }
-	
+       
     /**
      * Overloaded Constructor. Sets {@code rosterName} to the given String.
      *
@@ -28,7 +28,7 @@ public class TeamRoster {
     public TeamRoster(String teamName) {
         this.rosterName = teamName;
     }
-	
+       
     /**
      * Overloaded Constructor. Sets {@code rosterName} to the given String.
      * Sets {@code teamNickName} to the given String.
@@ -40,7 +40,7 @@ public class TeamRoster {
         this.rosterName = teamName;
         this.teamNickName = teamNickName;
     }
-	
+       
     /**
      * Sets {@code rosterName} to the given String.
      *
@@ -49,7 +49,7 @@ public class TeamRoster {
     public void setRosterName(String newName) {
         this.rosterName = newName;
     }
-	
+       
     /**
      * Adds the given NBAPlayer to {@code playerList}.
      *
@@ -58,7 +58,7 @@ public class TeamRoster {
     public void addPlayer(NBAPlayer newPlayer) {
         playerList.add(newPlayer);
     }
-	
+       
     /**
      * Returns {@code playerList.size()}.
      *
@@ -67,7 +67,7 @@ public class TeamRoster {
     public int getRosterSize() {
         return playerList.size();
     }
-	
+       
     /**
      * Returns {@code playerList}.
      *
@@ -76,7 +76,7 @@ public class TeamRoster {
     public LinkedList<NBAPlayer> getPlayerList() {
         return playerList;
     }
-	
+       
     /**
      * Returns {@code rosterName}.
      *
@@ -85,7 +85,7 @@ public class TeamRoster {
     public String getRosterName() {
         return this.rosterName;
     }
-	
+       
     /**
      * Returns {@code teamNickName}.
      *
@@ -94,7 +94,7 @@ public class TeamRoster {
     public String getTeamNickName() {
         return this.teamNickName;
     }
-	
+       
     /**
      * If {@code playerList} contains the given NBAPlayer, return {@code true}.
      * Else, return {@code false}.
@@ -103,7 +103,7 @@ public class TeamRoster {
      * @return boolean representation of player's presence
      */
     public boolean checkIfPlayerIsPresent(NBAPlayer newPlayer) {
-		
+      
         String first = newPlayer.getFirstName();
         String last = newPlayer.getLastName();
         for (int i = 0; i < playerList.size(); i++) {
@@ -113,9 +113,9 @@ public class TeamRoster {
             }
         } // for, traverse through player list, if player has same name as newPlayer return true
         return false;
-		
+     
     }
-	
+       
     /**
      * Returns a string representation of {@code this}.
      * 
