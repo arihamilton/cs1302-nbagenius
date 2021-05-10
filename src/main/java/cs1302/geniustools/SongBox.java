@@ -79,7 +79,7 @@ public class SongBox extends VBox {
         songImageView.setStyle("-fx-background-color: black; -fx-padding: 5");
         
         songLyric = new Label(songLyrics);
-        songLyric.setFont(Font.font("Arial", FontWeight.MEDIUM, 12));
+        songLyric.setFont(Font.font("Arial", FontWeight.MEDIUM, 14));
         songLyric.setAlignment(Pos.CENTER);
         songLyric.setTextAlignment(TextAlignment.CENTER);
         songLyric.setStyle("-fx-background-color: #f7e672");
