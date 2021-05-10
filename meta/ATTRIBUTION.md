@@ -25,7 +25,7 @@ authored by members of your project team.
 
 * Denver Nuggets Logo
   - `file:resources/logos_western/nuggets.png`
-  -	Denver Nuggets. 2020.
+  - Denver Nuggets. 2020.
   - https://www.nba.com/resources/static/team/v2/nuggets/images/NEFN.pdf
   - Fair Use
   
@@ -115,7 +115,7 @@ authored by members of your project team.
 
 * Boston Celtics Logo
   - `file:resources/logos_eastern/celtics.png`
-  -	Boston Celtics. 2017.
+  - Boston Celtics. 2017.
   - http://stats.nba.com/media/img/teams/logos/BOS_logo.svg
   - Fair Use
   
