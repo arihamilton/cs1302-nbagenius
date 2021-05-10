@@ -31,9 +31,9 @@ import com.google.gson.JsonElement;
  * then shows how many songs reference those members.
  */
 public class OmegaApp extends Application {
-	
-	Label currentTeamLabel;
-	
+    
+    Label currentTeamLabel;
+    
     /**
      * Constructs an {@code OmegaApp} object. This default (i.e., no argument)
      * constructor is executed in Step 2 of the JavaFX Application Life-Cycle.
@@ -43,9 +43,9 @@ public class OmegaApp extends Application {
     /** {@inheritDoc} */
     @Override
     public void start(Stage stage) {
-    	
-    	VBox pane = new VBox(30);
-
+        
+        VBox pane = new VBox(30);
+        
         TeamPages teamsPages = new TeamPages();
         
         pane.setAlignment(Pos.CENTER);
@@ -55,7 +55,7 @@ public class OmegaApp extends Application {
         teamsPages.getEastPane().setTeamLabel(currentTeamLabel);
 
         pane.getChildren().addAll(teamsPages, currentTeamLabel);
-    	
+        
         Scene scene = new Scene(pane, 1280, 720);
 
         stage.setMinWidth(1280);

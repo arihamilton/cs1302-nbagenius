@@ -31,31 +31,37 @@ import cs1302.nbatools.TeamButton;
  *
  */
 public class EasternTeamPane extends TilePane {
-	
-	private final TeamButton[] easternTeams = {
-			new TeamButton("file:resources/logos_eastern/hawks.png", "Atlanta Hawks", 1, "hawks"),
-		    new TeamButton("file:resources/logos_eastern/celtics.png", "Boston Celtics", 2, "celtics"),
-		    new TeamButton("file:resources/logos_eastern/nets.png", "Brooklyn Nets", 4, "nets"),
-		    new TeamButton("file:resources/logos_eastern/hornets.png", "Charlotte Hornets", 5, "hornets"),
-		    new TeamButton("file:resources/logos_eastern/bulls.png", "Chicago Bulls", 6, "bulls"),
-		    new TeamButton("file:resources/logos_eastern/cavaliers.png", "Cleveland Cavaliers", 7, "cavaliers"),
-		    new TeamButton("file:resources/logos_eastern/pistons.png", "Detroit Pistons", 10, "pistons"),
-		    new TeamButton("file:resources/logos_eastern/pacers.png", "Indiana Pacers", 15, "pacers"),
-		    new TeamButton("file:resources/logos_eastern/heat.png", "Miami Heat", 20, "heat"),
-		    new TeamButton("file:resources/logos_eastern/bucks.png", "Milwaukee Bucks", 21, "bucks"),
-		    new TeamButton("file:resources/logos_eastern/knicks.png", "New York Knicks", 24, "knicks"),
-		    new TeamButton("file:resources/logos_eastern/magic.png", "Orlando Magic", 26, "magic"),
-		    new TeamButton("file:resources/logos_eastern/76ers.png", "Philadelphia 76ers", 27, "76ers"),
-		    new TeamButton("file:resources/logos_eastern/raptors.png", "Toronto Raptors", 38, "raptors"),
-		    new TeamButton("file:resources/logos_eastern/wizards.png", "Washington Wizards", 41, "wizards")};
-	// array of teamButtons for the eastern conference
+       
+    private final TeamButton[] easternTeams = {
+        new TeamButton("file:resources/logos_eastern/hawks.png", "Atlanta Hawks", 1, "hawks"),
+        new TeamButton("file:resources/logos_eastern/celtics.png", "Boston Celtics", 2, "celtics"),
+        new TeamButton("file:resources/logos_eastern/nets.png", "Brooklyn Nets", 4, "nets"),
+        new TeamButton("file:resources/logos_eastern/hornets.png",
+        "Charlotte Hornets", 5, "hornets"),
+        new TeamButton("file:resources/logos_eastern/bulls.png", "Chicago Bulls", 6, "bulls"),
+        new TeamButton("file:resources/logos_eastern/cavaliers.png",
+        "Cleveland Cavaliers", 7, "cavaliers"),
+        new TeamButton("file:resources/logos_eastern/pistons.png",
+        "Detroit Pistons", 10, "pistons"),
+        new TeamButton("file:resources/logos_eastern/pacers.png", "Indiana Pacers", 15, "pacers"),
+        new TeamButton("file:resources/logos_eastern/heat.png", "Miami Heat", 20, "heat"),
+        new TeamButton("file:resources/logos_eastern/bucks.png", "Milwaukee Bucks", 21, "bucks"),
+        new TeamButton("file:resources/logos_eastern/knicks.png", "New York Knicks", 24, "knicks"),
+        new TeamButton("file:resources/logos_eastern/magic.png", "Orlando Magic", 26, "magic"),
+        new TeamButton("file:resources/logos_eastern/76ers.png", "Philadelphia 76ers", 27, "76ers"),
+        new TeamButton("file:resources/logos_eastern/raptors.png",
+        "Toronto Raptors", 38, "raptors"),
+        new TeamButton("file:resources/logos_eastern/wizards.png",
+        "Washington Wizards", 41, "wizards")};
+    // array of teamButtons for the eastern conference
     
     Label currentTeamLabel;
     Stage mainStage;
     Scene currentStageScene;
  
     /**
-     * Constructor. Uses the superclass {@code TilePane} constructor, then initializes its components.
+     * Constructor. Uses the superclass {@code TilePane} constructor.
+     * Then initializes its components.
      *
      */
     public EasternTeamPane() {
@@ -70,8 +76,8 @@ public class EasternTeamPane extends TilePane {
         this.setAlignment(Pos.CENTER);
         
         for (int i = 0; i < easternTeams.length; i++) {
-        	easternTeams[i].setOnMouseEntered(this::updateTeamLabelText);
-        	easternTeams[i].setOnAction(this::setConfirmScene);
+            easternTeams[i].setOnMouseEntered(this::updateTeamLabelText);
+            easternTeams[i].setOnAction(this::setConfirmScene);
             this.getChildren().add(easternTeams[i]);
         } // for, add all imageviews to this (TilePane)
    
@@ -97,7 +103,7 @@ public class EasternTeamPane extends TilePane {
      * @param e source event
      */
     private void updateTeamLabelText(MouseEvent e) {
-    	TeamButton sourceImg = (TeamButton)e.getSource();
+        TeamButton sourceImg = (TeamButton)e.getSource();
         Platform.runLater(() -> currentTeamLabel.setText(sourceImg.getTeamName()));
     } // updateTeamLabelText
     
@@ -107,14 +113,14 @@ public class EasternTeamPane extends TilePane {
      * @param e source event
      */
     private void setConfirmScene(ActionEvent e) {
-    	TeamButton sourceImg = (TeamButton)e.getSource();
-    	
-    	if (mainStage != null) {
-    	ConfirmationBox confirmationBox = new ConfirmationBox(sourceImg, currentStageScene);
-    	confirmationBox.setMainStage(mainStage);
-    	Scene scene = new Scene(confirmationBox, 1280, 720);
-        Platform.runLater(() -> mainStage.setScene(scene));
-    	}
+        TeamButton sourceImg = (TeamButton)e.getSource();
+        
+        if (mainStage != null) {
+            ConfirmationBox confirmationBox = new ConfirmationBox(sourceImg, currentStageScene);
+            confirmationBox.setMainStage(mainStage);
+            Scene scene = new Scene(confirmationBox, 1280, 720);
+            Platform.runLater(() -> mainStage.setScene(scene));
+        }
     } // setConfirmScene  
 
     /** 
@@ -129,13 +135,13 @@ public class EasternTeamPane extends TilePane {
     /** 
      * Sets {@code mainStage} to the given Stage.
      * 
-     * @param stage the given Stage
+     * @param mainStage the given Stage
      */
     public void setMainStage(Stage mainStage) {
-		this.mainStage = mainStage;
-		currentStageScene = mainStage.getScene();
-		System.out.println(currentStageScene);
-	}
+        this.mainStage = mainStage;
+        currentStageScene = mainStage.getScene();
+        System.out.println(currentStageScene);
+    }
     
   
 }

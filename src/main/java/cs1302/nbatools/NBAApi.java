@@ -39,10 +39,10 @@ public class NBAApi {
         try {
             String url = ENDPOINT + "/players/teamId/" + teamNo;
             return Optional.<JsonElement>ofNullable(getJson(url, "GET",
-            		new Pair<>("x-rapidapi-key", nbaApiKey),
-            		new Pair<>("x-rapidapi-host", "api-nba-v1.p.rapidapi.com")));
+                new Pair<>("x-rapidapi-key", nbaApiKey),
+                new Pair<>("x-rapidapi-host", "api-nba-v1.p.rapidapi.com")));
         } catch (IOException ioe) {
-        	System.out.println(ioe.getLocalizedMessage());
+            System.out.println(ioe.getLocalizedMessage());
             return Optional.<JsonElement>empty();
         } // try
     } // getTeamRoster
@@ -57,66 +57,83 @@ public class NBAApi {
      * @param pbs list of {@code ProgressBar}s to update as method runs
      * @return a {@code TeamRoster} that contains the players on the roster
      */
-    public static TeamRoster parseRosterPlayers(JsonElement roster, String nickName, ProgressBar... pbs) {
+    public static TeamRoster parseRosterPlayers(JsonElement roster, String nickName
+        , ProgressBar... pbs) {
         //try {
-            JsonElement results = get(roster, "api");
-            JsonElement players = get(results, "players");          
-            JsonArray playersArray = players.getAsJsonArray();
+        JsonElement results = get(roster, "api");
+        JsonElement players = get(results, "players");          
+        JsonArray playersArray = players.getAsJsonArray();
             
-            TeamRoster activeRoster = new TeamRoster(); 
-            int numPlayerResults = playersArray.size();
+        TeamRoster activeRoster = new TeamRoster(); 
+        int numPlayerResults = playersArray.size();
             
-            String firstName; String lastName;
-            String teamName = activeRoster.getRosterName();
+        String firstName;
+        String lastName;
+        String teamName = activeRoster.getRosterName();
             
-            for (int i = 0; i < numPlayerResults; i++) {
+        for (int i = 0; i < numPlayerResults; i++) {
 
-                JsonObject currentPlayer = playersArray.get(i).getAsJsonObject();
+            JsonObject currentPlayer = playersArray.get(i).getAsJsonObject();
+            createPlayer(currentPlayer, teamName, nickName, activeRoster);
                 
-                if (currentPlayer.get("leagues") == null) {
-                	continue;
-                } // if
-                JsonObject leagues = currentPlayer.get("leagues").getAsJsonObject();
-                if (leagues.get("standard") == null) {
-                	continue;
-                } // if
-                JsonObject standard = leagues.get("standard").getAsJsonObject();
-                if (standard.get("active") == null) {
-                	continue;
-                } // if
-                // check if active status is present. if not, move on to the next player
-                
-                String activeString = standard.get("active").getAsString();
-                
-                if (activeString != null && !activeString.isEmpty()) {   	
-                   
-                	firstName = currentPlayer.get("firstName").getAsString();
-                	lastName = currentPlayer.get("lastName").getAsString();
-                	
-                	NBAPlayer newPlayer = new NBAPlayer(firstName, lastName, teamName, nickName);
-                	
-                	if (!activeRoster.checkIfPlayerIsPresent(newPlayer)) {
-                		activeRoster.addPlayer(newPlayer);
-                	} // if, check if player is already in list
-                	
-                } // if, check if player is active
-                
-                for (ProgressBar pb : pbs) {
-                	double progress = ((1.0 * i) / (numPlayerResults - 1));
-                	updateProgress(progress, pb); //update progressbar
-                } // for, update all ProgressBars
-            }
-            System.out.println(activeRoster);
-            return activeRoster;
+            for (ProgressBar pb : pbs) {
+                double progress = ((1.0 * i) / (numPlayerResults - 1));
+                updateProgress(progress, pb); //update progressbar
+            } // for, update all ProgressBars
+        }
+        System.out.println(activeRoster);
+        return activeRoster;
     } // parseRosterPlayers
+
+
+    /**
+     * Creates a {@code NBAPlayer} based on the given JSONObject.
+     *
+     * @param currentPlayer the given JsonObject
+     * @param teamName the name to give to player's team
+     * @param nick the nickName to give to player's team
+     * @param ros the TeamRoster to place player in
+     */
+    private static void createPlayer(JsonObject currentPlayer, String teamName
+        , String nick, TeamRoster ros) {
+
+        if (currentPlayer.get("leagues") == null) {
+            return;
+        } // if
+        JsonObject leagues = currentPlayer.get("leagues").getAsJsonObject();
+        if (leagues.get("standard") == null) {
+            return;
+        } // if
+        JsonObject standard = leagues.get("standard").getAsJsonObject();
+        if (standard.get("active") == null) {
+            return;
+        } // if
+        // check if active status is present. if not, move on to the next player
+                
+        String activeString = standard.get("active").getAsString();
+                
+        if (activeString != null && !activeString.isEmpty()) {  
+                   
+            String firstName = currentPlayer.get("firstName").getAsString();
+            String lastName = currentPlayer.get("lastName").getAsString();
+                       
+            NBAPlayer newPlayer = new NBAPlayer(firstName, lastName, teamName, nick);
+                       
+            if (!ros.checkIfPlayerIsPresent(newPlayer)) {
+                ros.addPlayer(newPlayer);
+            } // if, check if player is already in list
+                       
+        } // if, check if player is active
+            
+    } // createPlayer
     
     /** 
      * Updates {@code pb} with the given progress amount.
      * 
      * @param progress the given progress amount
+     * @param pb the ProgressBar to update
      */
     private static void updateProgress(final double progress, ProgressBar pb) {
-    	//System.out.println(progress);
         Platform.runLater(() -> pb.setProgress(progress));
     } // updateProgress
 

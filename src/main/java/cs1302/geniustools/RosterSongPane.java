@@ -55,7 +55,8 @@ public class RosterSongPane extends TabPane {
     Stage mainStage;
     
     /**
-     * Constructor. Uses the superclass {@code TabPane} constructor, then initializes its components.
+     * Constructor. Uses the superclass {@code TabPane} constructor
+     * Then initializes its components.
      * Then sets the given {@code Stage}'s scene to the pane.
      * 
      * @param roster the given team roster
@@ -69,30 +70,32 @@ public class RosterSongPane extends TabPane {
         LinkedList<NBAPlayer> playerList = roster.getPlayerList();
         
         for (int i = 0; i < playerList.size(); i++) {
-        	NBAPlayer currentPlayer = playerList.get(i);
-        	if (currentPlayer.getSongList().size() > 0) {
-        		String playerName = currentPlayer.getFirstName() + " " + currentPlayer.getLastName();
-        		Tab tab = new Tab();
-        		tab.setText(playerName);
-        		
-        		LinkedList<GeniusSong> songList = currentPlayer.getSongList();
-        		
-        		Pagination pagination = new Pagination(songList.size(), 0);
-        		
-        		pagination.setPageFactory((index) -> {
-        				
-        			GeniusSong currentSong = songList.get(index);
-        			String condensedLyrics = HTMLScraperApi.getCondensedLyrics(currentPlayer, currentSong.getLyrics());
-        	        
-        			return new SongBox(currentPlayer, currentSong, condensedLyrics);
-        			
-        	        });
-        		
-        		tab.setContent(pagination);
-        		this.getTabs().add(tab);
+            NBAPlayer currentPlayer = playerList.get(i);
+            if (currentPlayer.getSongList().size() > 0) {
+                String playerName = (currentPlayer.getFirstName()
+                    + " " + currentPlayer.getLastName());
+                Tab tab = new Tab();
+                tab.setText(playerName);
+         
+                LinkedList<GeniusSong> songList = currentPlayer.getSongList();
+           
+                Pagination pagination = new Pagination(songList.size(), 0);
+               
+                pagination.setPageFactory((index) -> {
+              
+                    GeniusSong currentSong = songList.get(index);
+                    String condensedLyrics = HTMLScraperApi.getCondensedLyrics(currentPlayer
+                        , currentSong.getLyrics());
+         
+                    return new SongBox(currentPlayer, currentSong, condensedLyrics);
+            
+                });
+        
+                tab.setContent(pagination);
+                this.getTabs().add(tab);
 
-        	} // if, if player has songs then create pages for them
-        	
+            } // if, if player has songs then create pages for them
+        
         } // for, check roster and add tab if player has songs
         
         Button goBackButton = new Button("Return to Selection Screen");
@@ -129,10 +132,10 @@ public class RosterSongPane extends TabPane {
      */
     private void refreshStage(ActionEvent e) {
 
-    	if (mainStage != null) {
+        if (mainStage != null) {
 
-        Platform.runLater(() -> refresh(mainStage));
-    	}
+            Platform.runLater(() -> refresh(mainStage));
+        }
     } // updateTeamLabelText
     
     /** 
@@ -141,10 +144,10 @@ public class RosterSongPane extends TabPane {
      * @param stage the given Stage
      */
     private void refresh(Stage stage) {
-    	
-    	stage.hide();
+       
+        stage.hide();
 
-    	VBox pane = new VBox(30);
+        VBox pane = new VBox(30);
         TeamPages teamsPages = new TeamPages();
         
         pane.setAlignment(Pos.CENTER);
@@ -154,7 +157,7 @@ public class RosterSongPane extends TabPane {
         teamsPages.getEastPane().setTeamLabel(currentTeamLabel);
 
         pane.getChildren().addAll(teamsPages, currentTeamLabel);
-    	
+        
         Scene scene = new Scene(pane, 1280, 720);
 
         stage.setMinWidth(1280);

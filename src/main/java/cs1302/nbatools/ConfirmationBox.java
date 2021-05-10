@@ -44,6 +44,8 @@ public class ConfirmationBox extends VBox {
     /**
      * Constructor. Uses the superclass {@code VBox} constructor, then initializes its components.
      *
+     * @param team the {@code TeamButton} to set team to
+     * @param currentScene the {@code Scene} to set currentScene to
      */
     public ConfirmationBox(TeamButton team, Scene currentScene) {
 
@@ -87,11 +89,11 @@ public class ConfirmationBox extends VBox {
     /** 
      * Sets {@code mainStage} to the given Stage.
      * 
-     * @param stage the given Stage
+     * @param mainStage the given Stage
      */
     public void setMainStage(Stage mainStage) {
-		this.mainStage = mainStage;
-	} // setMainStage
+        this.mainStage = mainStage;
+    } // setMainStage
     
     /** 
      * Changes {@code mainStage}'s scene to {@code originScene}.
@@ -99,11 +101,11 @@ public class ConfirmationBox extends VBox {
      * @param e source event
      */
     private void setPagesScene(ActionEvent e) {
-    	if (mainStage != null) {
-    		if (originScene != null) {
-		        Platform.runLater(() -> mainStage.setScene(originScene));
-		    } // if
-    	} // if
+        if (mainStage != null) {
+            if (originScene != null) {
+                Platform.runLater(() -> mainStage.setScene(originScene));
+            } // if
+        } // if
     } // setPagesScene
     
     /** 
@@ -112,12 +114,12 @@ public class ConfirmationBox extends VBox {
      * @param e source event
      */
     private void setProcessingScene(ActionEvent e) {
-    	if (mainStage != null) {
-    	ProcessingBox processor = new ProcessingBox(team);
-    	processor.setMainStage(mainStage);	
-    	Scene scene = new Scene(processor, 1280, 720);
-        Platform.runLater(() -> mainStage.setScene(scene));
-    	} // if
+        if (mainStage != null) {
+            ProcessingBox processor = new ProcessingBox(team);
+            processor.setMainStage(mainStage);
+            Scene scene = new Scene(processor, 1280, 720);
+            Platform.runLater(() -> mainStage.setScene(scene));
+        } // if
     } // setProcessingScene
 
 

@@ -63,6 +63,7 @@ public class ProcessingBox extends VBox {
     /**
      * Constructor. Uses the superclass {@code HBox} constructor, then initializes its components.
      *
+     * @param team the {@code TeamButton} to use to construct this
      */
     public ProcessingBox(TeamButton team) {
 
@@ -71,7 +72,8 @@ public class ProcessingBox extends VBox {
         
         this.team = team;
         
-        Image loadingImg = new Image("file:resources/sprites/loading_gif.gif", 100, 100, true, true);
+        Image loadingImg = new Image("file:resources/sprites/loading_gif.gif",
+            100, 100, true, true);
         
         loadingView = new ImageView(loadingImg);
         
@@ -95,36 +97,35 @@ public class ProcessingBox extends VBox {
      * 
      */
     public void getRoster() {
-    	
-    	while(!keysSet) {
+       
+        while (!keysSet) {
             try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } // while, wait until api keys are set
-    	
-	    	int teamId = team.getTeamId();
-	    	String teamName = team.getTeamName();
-	    	String nickName = team.getTeamNickName();
-	    	
-	    	Platform.runLater(() -> statusLabel.setText("Getting " + teamName + " Roster..."));
-	    	
-	    	Optional<JsonElement> optionalRosterList = NBAApi.getTeamRoster(teamId, nbaApiKey);
-	    	JsonElement rosterList = optionalRosterList.get();
-	    	
-	    	if (rosterList != null) {
-	    		roster =  NBAApi.parseRosterPlayers(rosterList, nickName, pb);	    	
-	    	}
-	    	else {
-	    		Platform.runLater(() -> sendAlert("No players found. Please try again."));
-	    	} // if roster has players then parse it, else send an alert
-	    	
-	    	try { 
-	    		runNow(() -> setSongsForRoster());
-	    	} catch (NoSuchElementException ioe) {
-				Platform.runLater(() -> sendAlert("An API error occured. Please try again."));   
-	        } // try, throws exception if API call fails
+       
+        int teamId = team.getTeamId();
+        String teamName = team.getTeamName();
+        String nickName = team.getTeamNickName();
+       
+        Platform.runLater(() -> statusLabel.setText("Getting " + teamName + " Roster..."));
+      
+        Optional<JsonElement> optionalRosterList = NBAApi.getTeamRoster(teamId, nbaApiKey);
+        JsonElement rosterList = optionalRosterList.get();
+      
+        if (rosterList != null) {
+            roster =  NBAApi.parseRosterPlayers(rosterList, nickName, pb);     
+        } else {
+            Platform.runLater(() -> sendAlert("No players found. Please try again."));
+        } // if roster has players then parse it, else send an alert
+    
+        try { 
+            runNow(() -> setSongsForRoster());
+        } catch (NoSuchElementException ioe) {
+            Platform.runLater(() -> sendAlert("An API error occured. Please try again."));   
+        } // try, throws exception if API call fails
 
     } // getRoster
     
@@ -134,81 +135,80 @@ public class ProcessingBox extends VBox {
      * 
      */
     public void setSongsForRoster() {
-    	
-    	Platform.runLater(() -> statusLabel.setText("Getting Lyric References..."));
-    	
-    	if (roster != null && !(roster.getPlayerList().isEmpty())) {
-    	
-	    	int rosterSize = roster.getRosterSize();
-	    	LinkedList<NBAPlayer> rosterList = roster.getPlayerList();
-	    	
-	    	for (int i = 0; i < rosterSize; i++) {
-	    		
-	    		NBAPlayer player = rosterList.get(i);
-	    		String playerName = (player.getFirstName() + " " + player.getLastName());
-	    		final int newI = i + 1;
-	    		
-	    		Platform.runLater(() -> statusLabel.setText("Getting Lyric References... (" + newI + "/" + rosterSize + ")"));
-	    		
-	    		Optional<JsonElement> optionalSongList = GeniusApi.searchForSongs(playerName, nbaApiKey);	
-	    		if (optionalSongList == null) {
-	    			System.out.println("No songs found for " + playerName);
-		    	}
-	    		else {
-	    			JsonElement songList = optionalSongList.get();
-			    	if (songList != null) {
-			    		GeniusApi.parseSongs(songList, player, pb);
-			    	}
-			    	else {
-			    		System.out.println("No songs found for " + playerName);
-			    	} // if player has songs then parse then
-			    	
-	    		} // if, search for songs with lyrics with player's full name
+       
+        Platform.runLater(() -> statusLabel.setText("Getting Lyric References..."));
+       
+        if (roster != null && !(roster.getPlayerList().isEmpty())) {
+       
+            int rosterSize = roster.getRosterSize();
+            LinkedList<NBAPlayer> rosterList = roster.getPlayerList();
+      
+            for (int i = 0; i < rosterSize; i++) {
+       
+                NBAPlayer player = rosterList.get(i);
+                String playerName = (player.getFirstName() + " " + player.getLastName());
+                final int newI = i + 1;
+       
+                Platform.runLater(() -> statusLabel.setText("Getting Lyric References... (" + newI +
+                    "/" + rosterSize + ")"));
+       
+                Optional<JsonElement> optionalSongList = GeniusApi.searchForSongs(playerName,
+                    nbaApiKey);    
+                if (optionalSongList == null) {
+                    System.out.println("No songs found for " + playerName);
+                } else {
+                    JsonElement songList = optionalSongList.get();
+                    if (songList != null) {
+                        GeniusApi.parseSongs(songList, player, pb);
+                    } else {
+                        System.out.println("No songs found for " + playerName);
+                    } // if player has songs then parse then
 
-	        } // for, traverse through player list, if player has same name as newPlayer return true    	
-    	} // if, check if roster has players
-    	
-    	runNow(() -> parseSongsForRoster());
-    	
+                } // if, search for songs with lyrics with player's full name
+            } // for, go through player list, if player has same name as newPlayer return true 
+        } // if, check if roster has players
+       
+        runNow(() -> parseSongsForRoster());
+       
     }
     
     /**
      * Iterates through players on {@code roster}.
-     * Calls {@codeparseSongLyrics()} on each player.
+     * Calls {@code parseSongLyrics()} on each player.
      * After each player's songs are parsed, call {@code createSongPane()}.
      * 
      */
     public void parseSongsForRoster() {
-    	
-    	Platform.runLater(() -> statusLabel.setText("Parsing Song Lyrics..."));
-    	
-    	int rosterSize = roster.getRosterSize();
-    	LinkedList<NBAPlayer> rosterList = roster.getPlayerList();
-    	
-    	for (int i = 0; i < rosterSize; i++) {
-    		
-    		NBAPlayer player = rosterList.get(i);
-    		LinkedList<GeniusSong> songList = player.getSongList();
-    		
-    		final int newI = i + 1;
-    		runNow(() -> parseSongLyrics(player, songList, newI));
-    		
+       
+        Platform.runLater(() -> statusLabel.setText("Parsing Song Lyrics..."));
+       
+        int rosterSize = roster.getRosterSize();
+        LinkedList<NBAPlayer> rosterList = roster.getPlayerList();
+       
+        for (int i = 0; i < rosterSize; i++) {
+      
+            NBAPlayer player = rosterList.get(i);
+            LinkedList<GeniusSong> songList = player.getSongList();
+     
+            final int newI = i + 1;
+            runNow(() -> parseSongLyrics(player, songList, newI));
+      
             double progress = ((1.0 * i) / (rosterSize - 1));
             updateProgress(progress); //update progressbar
    
         } // for, traverse roster and parse through songs for each player
 
-    	while(!parsed) {
+        while (!parsed) {
             try {
-				Thread.sleep(2000);
-				checkRosterParsed();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} // try
+                Thread.sleep(2000);
+                checkRosterParsed();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } // try
         } // wait until entire roster is parsed
-    	
-    	createSongPane();
-    	
+       
+        createSongPane();
+       
     }
     
     /**
@@ -230,14 +230,14 @@ public class ProcessingBox extends VBox {
      * 
      */
     private void setKeys() {
-    	try (FileInputStream configFileStream = new FileInputStream(configPath)) {
+        try (FileInputStream configFileStream = new FileInputStream(configPath)) {
             Properties config = new Properties();
             config.load(configFileStream);
             nbaApiKey = config.getProperty("apinba.apikey");         // get apinba.apikey
             keysSet = true;
         } catch (IOException ioe) {
-        	Platform.runLater(() -> sendAlert("API keys not found. Please try again."));
-        } // try, get keys from properties file in resources	
+            Platform.runLater(() -> sendAlert("API keys not found. Please try again."));
+        } // try, get keys from properties file in resources   
     }
     
     /** 
@@ -250,9 +250,9 @@ public class ProcessingBox extends VBox {
         alert.setContentText(msg);
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-            	if (mainStage != null) {
-            		refresh(mainStage);
-            	} // if
+                if (mainStage != null) {
+                    refresh(mainStage);
+                } // if
             } // if
         });
     } // sendAlert
@@ -271,7 +271,10 @@ public class ProcessingBox extends VBox {
      * 
      */
     private void createSongPane() {
-    	Platform.runLater(() -> { RosterSongPane songPane = new RosterSongPane(roster, mainStage);} );
+        Platform.runLater(() -> {
+            RosterSongPane songPane = new RosterSongPane(roster,
+                mainStage);
+        } );
     } // updateProgress
  
     /** 
@@ -280,8 +283,8 @@ public class ProcessingBox extends VBox {
      * @param mainStage the given Stage
      */
     public void setMainStage(Stage mainStage) {
-		this.mainStage = mainStage;
-	}
+        this.mainStage = mainStage;
+    }
     
     /** 
      * Iterates through {@code roster} and checks if its players are parsed.
@@ -289,21 +292,23 @@ public class ProcessingBox extends VBox {
      * 
      */
     private void checkRosterParsed() {
-    	int rosterSize = roster.getRosterSize();
-    	LinkedList<NBAPlayer> rosterList = roster.getPlayerList();
-    	boolean rosterChecked = true;
-    	
-    	for (int i = 0; i < rosterSize; i++) {	
-    		NBAPlayer player = rosterList.get(i);
-    		if (!player.getSongListParsed()) {
-    			System.out.println((player.getFirstName() + " isn't parsed"));
-    			rosterChecked = false;
-    			parsed = false;
-    		}
+        int rosterSize = roster.getRosterSize();
+        LinkedList<NBAPlayer> rosterList = roster.getPlayerList();
+        boolean rosterChecked = true;
+        
+        for (int i = 0; i < rosterSize; i++) { 
+            NBAPlayer player = rosterList.get(i);
+            if (!player.getSongListParsed()) {
+                System.out.println((player.getFirstName() + " isn't parsed"));
+                rosterChecked = false;
+                parsed = false;
+            }
         } // for, traverse through player list, if player song list is parsed return true
-    	
-    	if (rosterChecked) parsed = true;
-	}
+       
+        if (rosterChecked) {
+            parsed = true;
+        } // if
+    }
 
     /** 
      * Uses the HTML Api to parse the given NBAPlayer's {@code songList}'s lyrics.
@@ -313,58 +318,62 @@ public class ProcessingBox extends VBox {
      * @param newI the player's position in their roster
      */
     private void parseSongLyrics(NBAPlayer player, LinkedList<GeniusSong> songList, int newI) {
-    	
-    	for (int j = 0; j < songList.size(); j++) {
-			
-			GeniusSong song = songList.get(j);
-			
-			Optional<JsonElement> songOptionalFullLyrics = HTMLScraperApi.getSongLyrics(song.getSongUrl(), nbaApiKey);	
-			
-			if (songOptionalFullLyrics == null) {
-				System.out.println(song.getSongUrl());
-				System.out.println("Song has no lyrics");
-				songList.remove(song);
-				j--;
-	    	} // if
-			else {
-				
-				try { 
-					JsonElement lyricsElement = songOptionalFullLyrics.get();
-					JsonObject lyricsObject = lyricsElement.getAsJsonObject();
-					if (lyricsObject.get("result") != null) {
-						JsonElement lyricsResult = lyricsObject.get("result");
-						JsonArray lyricsArray = lyricsResult.getAsJsonArray();
-						while (lyricsArray == null || (lyricsArray.size() <= 0)) {
-							songOptionalFullLyrics = HTMLScraperApi.getSongLyrics(song.getSongUrl(), nbaApiKey);
-							lyricsElement = songOptionalFullLyrics.get();
-		    				lyricsObject = lyricsElement.getAsJsonObject();
-		    				lyricsResult = lyricsObject.get("result");
-	    					lyricsArray = lyricsResult.getAsJsonArray();
-				    	} // while, query until html call returns lyrics
-						
-						final JsonElement finallyricsElement = lyricsElement;
-						boolean result = HTMLScraperApi.parseLyrics(finallyricsElement, player, song, pb);
-						if (!result) j--;
-	
-					}
-					else {
-						System.out.println(song.getSongUrl());
-						System.out.println("Song has no lyrics");
-	    				songList.remove(song);
-	    				j--;
-					} // if, if lyrics aren't empty then parse them, else remove song from list
-				
-				} catch (NoSuchElementException ioe) {
-					songList.remove(song);
-					j--;
-		        } // try, if song contains lyrics then parse them, else remove song from list
-			}
-			
-		} // for, go through song list
-    	
-    	parsedNo++;
-    	Platform.runLater(() -> statusLabel.setText("Parsing Song Lyrics... (" + parsedNo + "/" + roster.getRosterSize() + ")"));
-    	
+       
+        for (int j = 0; j < songList.size(); j++) {
+            
+            GeniusSong song = songList.get(j);
+     
+            Optional<JsonElement> songOptionalFullLyrics = HTMLScraperApi.getSongLyrics(
+                song.getSongUrl(), nbaApiKey); 
+      
+            if (songOptionalFullLyrics == null) {
+                System.out.println(song.getSongUrl());
+                System.out.println("Song has no lyrics");
+                songList.remove(song);
+                j--;
+            } else {
+      
+                try { 
+                    JsonElement lyricsElement = songOptionalFullLyrics.get();
+                    JsonObject lyricsObject = lyricsElement.getAsJsonObject();
+                    if (lyricsObject.get("result") != null) {
+                        JsonElement lyricsResult = lyricsObject.get("result");
+                        JsonArray lyricsArray = lyricsResult.getAsJsonArray();
+                        while (lyricsArray == null || (lyricsArray.size() <= 0)) {
+                            songOptionalFullLyrics = HTMLScraperApi.getSongLyrics(song.getSongUrl(),
+                            nbaApiKey);
+                            lyricsElement = songOptionalFullLyrics.get();
+                            lyricsObject = lyricsElement.getAsJsonObject();
+                            lyricsResult = lyricsObject.get("result");
+                            lyricsArray = lyricsResult.getAsJsonArray();
+                        } // while, query until html call returns lyrics
+    
+                        final JsonElement finallyricsElement = lyricsElement;
+                        boolean result = HTMLScraperApi.parseLyrics(finallyricsElement, player,
+                            song, pb);
+                        if (!result) {
+                            j--;
+                        } // if
+       
+                    } else {
+                        System.out.println(song.getSongUrl());
+                        System.out.println("Song has no lyrics");
+                        songList.remove(song);
+                        j--;
+                    } // if, if lyrics aren't empty then parse them, else remove song from list
+       
+                } catch (NoSuchElementException ioe) {
+                    songList.remove(song);
+                    j--;
+                } // try, if song contains lyrics then parse them, else remove song from list
+            } // if
+       
+        } // for, go through song list
+      
+        parsedNo++;
+        Platform.runLater(() -> statusLabel.setText("Parsing Song Lyrics... (" + parsedNo + "/"
+            + roster.getRosterSize() + ")"));
+       
     }
     
     /** 
@@ -373,10 +382,10 @@ public class ProcessingBox extends VBox {
      * @param stage the given Stage
      */
     private void refresh(Stage stage) {
-    	
-    	stage.hide();
+       
+        stage.hide();
 
-    	VBox pane = new VBox(30);
+        VBox pane = new VBox(30);
         TeamPages teamsPages = new TeamPages();
         
         pane.setAlignment(Pos.CENTER);
@@ -386,7 +395,7 @@ public class ProcessingBox extends VBox {
         teamsPages.getEastPane().setTeamLabel(currentTeamLabel);
 
         pane.getChildren().addAll(teamsPages, currentTeamLabel);
-    	
+       
         Scene scene = new Scene(pane, 1280, 720);
 
         stage.setMinWidth(1280);

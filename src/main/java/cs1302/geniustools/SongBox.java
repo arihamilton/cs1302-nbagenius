@@ -57,14 +57,14 @@ public class SongBox extends VBox {
         String artistName = (song.getArtistName() + " - " + song.getSongName());
         
         ArrayList<String> swearList = new ArrayList<String>();
-    	try {
-    		FileReader txtFile = new FileReader("resources/filterwords.txt");
-    		Scanner scan = new Scanner(txtFile);
-            while(scan.hasNextLine()) {
-            	swearList.add(scan.nextLine());
+        try {
+            FileReader txtFile = new FileReader("resources/filterwords.txt");
+            Scanner scan = new Scanner(txtFile);
+            while (scan.hasNextLine()) {
+                swearList.add(scan.nextLine());
             } // while, get list of swears
             scan.close();
-    	} catch (FileNotFoundException ioe) {
+        } catch (FileNotFoundException ioe) {
             System.err.println("Filter list not found");
         } // try
         
