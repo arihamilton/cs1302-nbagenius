@@ -11,18 +11,35 @@ Markdown is transformed into nice looking HTML.
 > category that you chose, and the primary functions available to users
 > of the app.
 
-TODO WRITE / REPLACE
+* App Category
+  - The app is an External API Tool. 
+
+* App Functions
+  - This app gets an NBA team based on the user's choice,
+  - then finds songs that use one of that team's players as a lyric.
+  -
+  - Upon opening the app, they will be able to pick an NBA team.
+  - The app then processes that team using the NBA Api, Genius API, and ScraperMonkey API (which gets the song's lyrics off of its Genius page).
+  - For each player on the roster, the app shows a list of songs that contain that player's full name.
+  - Then, the player can choose to select another team. 
+                
 
 ## Part 2: New
 
 > What is something new and/or exciting that you learned from working
 > on this project?
 
-TODO WRITE / REPLACE
+* What did I learn?
+  - I learned about how to work with APIs! The gallery app was a good start, and I wanted to find out what else I could do with APIs.
+  - With the gallery I was limited to one API, but now I've learned about how to find more (through sites like RapidApi) and how I can query them.
+  - I've always wanted to make an app where you input a Spotify song and it gives you a list of similar songs, and now I think I can!
 
 ## Part 3: Retrospect
 
 > If you could start the project over from scratch, what do
 > you think might do differently and why?
-
-TODO WRITE / REPLACE
+        
+* Retrospect
+  - If I could start over, I would definitely spend more time researching APIs. The Genius API I have works, but it is very slow.
+  - Also, the Scraper API I use is decent, but it doesn't format a page's HTML very well.
+  - I would also research how to make my own API -- so I can have complete control over what kind of data I receive from a query.
