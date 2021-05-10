@@ -41,10 +41,10 @@ public class GeniusApi {
         try {
             String url = ENDPOINT + "/search?q=" + encode(searchTerm, UTF8);
             return Optional.<JsonElement>ofNullable(getJson(url, "GET",
-            		new Pair<>("x-rapidapi-key", geniusApiKey),
-            		new Pair<>("x-rapidapi-host", "genius.p.rapidapi.com")));
+                new Pair<>("x-rapidapi-key", geniusApiKey),
+                new Pair<>("x-rapidapi-host", "genius.p.rapidapi.com")));
         } catch (IOException ioe) {
-        	System.out.println(ioe.getLocalizedMessage());
+            System.out.println(ioe.getLocalizedMessage());
             return Optional.<JsonElement>empty();
         } // try
     } // searchForSongs
@@ -59,73 +59,73 @@ public class GeniusApi {
      * 
      */
     public static void parseSongs(JsonElement songList, NBAPlayer player, ProgressBar... pbs) {
-            JsonElement results = get(songList, "response");
-            JsonElement hits = get(results, "hits");   
-            JsonArray hitsArray = hits.getAsJsonArray();
-            int numSongResults = hitsArray.size();
-            
-            String songArtistName; String songName ; String songImageUrl; String songPageUrl;
-            
-            for (int i = 0; i < numSongResults; i++) {
-
-                JsonObject currentSong = hitsArray.get(i).getAsJsonObject();
-                
-                if (currentSong.get("result") == null) { continue; } // if
-                JsonObject songResult = currentSong.get("result").getAsJsonObject();
-                if (songResult.get("stats") == null) { continue; } // if
-                if (songResult.get("primary_artist") == null) { continue; } // if
-                JsonObject songStats = songResult.get("stats").getAsJsonObject();
-                JsonObject songArtist = songResult.get("primary_artist").getAsJsonObject();
-        
-                // check if song has stats and artist name. if not, move on to the next player
-
-                if (songStats != null && songArtist != null) {   	
-                   
-                	songArtistName = songArtist.get("name").getAsString();
-                	songName = songResult.get("title").getAsString();
-                	songImageUrl = songResult.get("header_image_url").getAsString();
-                	Image songImage = new Image("file:resources/placeholder_image.png", 200, 200, true, true);
-                	
-                	if (songImageUrl != null) { songImage = new Image(songImageUrl); } 
-                	// if, check if song has image
-                	if (songArtistName.equals("NBA") || songArtistName.contains("Rap Genius") || songArtistName.equals("Genius")
-                			|| songArtistName.contains("NBA (Archives)") || songArtistName.equals("NFL")
-                			|| songArtistName.contains("Sports Genius")) {
-                		continue;
-                	} // if, check if song has a valid artist
-                	if (songName.contains("Resignation Letter") || songName.contains("Roster") || songName.contains("Athlete References")
-                			|| songName.contains("NBA (Archives)") || songName.contains("NBA Draft") 
-                			|| songName.contains("Sponsored Athletes")
-                			|| songName.contains("Release Calendar") || songName.contains("Sports Genius")) {
-                		continue;
-                	} // if, check if song is actually a song with lyrics
-                	if ((songStats.get("pageviews") == null) || (songStats.get("pageviews").getAsInt() < 100)) {
-                		continue;
-                	} // if, check if the song is actually popular
-                	
-                	songPageUrl = songResult.get("url").getAsString();
-                	GeniusSong newSong = new GeniusSong(songArtistName, songName, songImage, songPageUrl);
-                	
-                	if (!player.checkIfSongIsPresent(newSong)) {
-                		player.addSongToList(newSong);
-                		System.out.println(newSong);
-                	} // if, check if song is already in list       	
-                } // if, check if song is valid
-                
-                for (ProgressBar pb : pbs) {
-                	double progress = ((1.0 * i) / (numSongResults - 1));
-                	updateProgress(progress, pb); //update progressbar
-                } // for, update given ProgressBars
-            }
+        JsonElement results = get(songList, "response");
+        JsonElement hits = get(results, "hits");   
+        JsonArray hitsArray = hits.getAsJsonArray();
+        int numSongResults = hitsArray.size();
+        String songArtistName, songName, songImageUrl, songPageUrl;
+        for (int i = 0; i < numSongResults; i++) {
+            JsonObject currentSong = hitsArray.get(i).getAsJsonObject();
+            if (currentSong.get("result") == null) {
+                continue;
+            } // if
+            JsonObject songResult = currentSong.get("result").getAsJsonObject();
+            if (songResult.get("stats") == null) {
+                continue;
+            } // if
+            if (songResult.get("primary_artist") == null) {
+                continue;
+            } // if
+            JsonObject songStats = songResult.get("stats").getAsJsonObject();
+            JsonObject songArtist = songResult.get("primary_artist").getAsJsonObject();
+            if (songStats != null && songArtist != null) {    
+                songArtistName = songArtist.get("name").getAsString();
+                songName = songResult.get("title").getAsString();
+                songImageUrl = songResult.get("header_image_url").getAsString();
+                Image songImage = new Image("file:resources/placeholder_image.png"
+                    , 200, 200, true, true);
+                if (songImageUrl != null) {
+                    songImage = new Image(songImageUrl);
+                } 
+                // if, check if song has image
+                if (songArtistName.equals("NBA") || songArtistName.contains("Rap Genius")
+                    || songArtistName.equals("Genius")
+                    || songArtistName.contains("NBA (Archives)") || songArtistName.equals("NFL")
+                    || songArtistName.contains("Sports Genius")) {
+                    continue;
+                } // if, check if song has a valid artist
+                if (songName.contains("Resignation Letter") || songName.contains("Roster")
+                    || songName.contains("Athlete References") || songName.contains("NBA Draft") 
+                    || songName.contains("Sponsored Athletes")
+                    || songName.contains("Release Calendar")
+                    || songName.contains("Sports Genius")) {
+                    continue;
+                } // if, check if song is actually a song with lyrics
+                if ((songStats.get("pageviews") == null)
+                    || (songStats.get("pageviews").getAsInt() < 100)) {
+                    continue;
+                } // if, check if the song is actually popular
+                songPageUrl = songResult.get("url").getAsString();
+                GeniusSong newSong = new GeniusSong(songArtistName, songName
+                    , songImage, songPageUrl);
+                if (!player.checkIfSongIsPresent(newSong)) {
+                    player.addSongToList(newSong);
+                } // if, check if song is already in list
+            } // if, check if song is valid
+            for (ProgressBar pb : pbs) {
+                double progress = ((1.0 * i) / (numSongResults - 1));
+                updateProgress(progress, pb); //update progressbar
+            } // for, update given ProgressBars
+        }
     } // parseSongs
     
     /** 
      * Updates {@code pb} with the given progress amount.
      * 
      * @param progress the given progress amount
+     * @param pb the ProgressBar to update
      */
     private static void updateProgress(final double progress, ProgressBar pb) {
-    	//System.out.println(progress);
         Platform.runLater(() -> pb.setProgress(progress));
     } // updateProgress
 

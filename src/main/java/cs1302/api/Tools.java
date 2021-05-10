@@ -92,24 +92,17 @@ public class Tools {
 
     /**
      * Return a {@link JsonElement} for the JSON response from some URL.
-     * @param url URL of the desired JSON
+     * @param postUrl URL of the desired JSON
      * @param requestMethod HTTP request method to use (e.g., {@code "GET"}, {@code "POST"}, etc.)
      * @param headers list of HTTP headers to use
      * @return object for the desired JSON
      * @throws IOException if something goes wrong with either the download
      *                     or parsing of the JSON
      */
-    /**
-     * @param postUrl
-     * @param requestMethod
-     * @param headers
-     * @return
-     * @throws IOException
-     */
     @SafeVarargs
-	public static JsonElement getHttpJsonPOST(
+    public static JsonElement getHttpJsonPOST(
         String postUrl, String requestMethod, Pair<String, String>... headers) throws IOException {
-    	
+        
         URL location = new URL("https://scrapingmonkey.p.rapidapi.com/byClass");
         URLConnection con = location.openConnection();
         HttpURLConnection http = null;
@@ -128,7 +121,7 @@ public class Tools {
 
         OutputStream os = con.getOutputStream();
         BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(os, "UTF-8"));
+            new OutputStreamWriter(os, "UTF-8"));
         writer.write((postUrl));
         writer.close();
         // Code modified from https://stackoverflow.com/questions/9767952

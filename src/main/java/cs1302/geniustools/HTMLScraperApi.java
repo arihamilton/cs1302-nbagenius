@@ -53,11 +53,11 @@ public class HTMLScraperApi {
         try {
             String url = ENDPOINT + "class=lyrics&url=" + encode(lyricsUrl, UTF8);
             return Optional.<JsonElement>ofNullable(Tools.getHttpJsonPOST(url, "POST",
-            		new Pair<>("content-type", "application/x-www-form-urlencoded"),
-            		new Pair<>("x-rapidapi-key", htmlApiKey),
-            		new Pair<>("x-rapidapi-host", "scrapingmonkey.p.rapidapi.com")));
+                new Pair<>("content-type", "application/x-www-form-urlencoded"),
+                new Pair<>("x-rapidapi-key", htmlApiKey),
+                new Pair<>("x-rapidapi-host", "scrapingmonkey.p.rapidapi.com")));
         } catch (IOException ioe) {
-        	System.out.println(ioe.getLocalizedMessage());
+            System.out.println(ioe.getLocalizedMessage());
             return Optional.<JsonElement>empty();
         } // try
     } // getSongLyrics
@@ -73,71 +73,62 @@ public class HTMLScraperApi {
      * 
      * @return true if lyrics contain name, false otherwise
      */
-    public static boolean parseLyrics(JsonElement lyricsElement, NBAPlayer player, GeniusSong song, ProgressBar... pbs) {
+    public static boolean parseLyrics(JsonElement lyricsElement, NBAPlayer player
+        , GeniusSong song, ProgressBar... pbs) {
         //try {
-            JsonElement results = get(lyricsElement, "result");
-            String fullLyrics = results.getAsString();
+        JsonElement results = get(lyricsElement, "result");
+        String fullLyrics = results.getAsString();
             
-            fullLyrics = Normalizer.normalize(fullLyrics, Normalizer.Form.NFD);
-            Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-            fullLyrics = pattern.matcher(fullLyrics).replaceAll("");      
-            // Code retrieved from https://stackoverflow.com/questions/1008802, strips accents
+        fullLyrics = Normalizer.normalize(fullLyrics, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        fullLyrics = pattern.matcher(fullLyrics).replaceAll("");      
+        // Code retrieved from https://stackoverflow.com/questions/1008802, strips accents
 
-            fullLyrics = fullLyrics.replace("&quot;", "\"");
-            fullLyrics = fullLyrics.replace("&amp;", "&");
+        fullLyrics = fullLyrics.replace("&quot;", "\"");
+        fullLyrics = fullLyrics.replace("&amp;", "&");
 
-            String[] splitLyrics = fullLyrics.split("\\s(?=[A-Z])");
-            List<String> splitLyricsList = Arrays.asList(splitLyrics);
-            ArrayList<String> splitLyricsArrayList = new ArrayList<String>(splitLyricsList);
-            // split lyrics based on spaces
-      
-            editLyricsArray(splitLyricsArrayList, 25);
+        String[] splitLyrics = fullLyrics.split("\\s(?=[A-Z])");
+        List<String> splitLyricsList = Arrays.asList(splitLyrics);
+        ArrayList<String> splitLyricsArrayList = new ArrayList<String>(splitLyricsList);
+        // split lyrics based on spaces
+        editLyricsArray(splitLyricsArrayList, 25);
+        editLyricsArray(splitLyricsArrayList, player.getFirstName(), player.getLastName());
+        // if line contains last name but not first combine it with the last
             
-            editLyricsArray(splitLyricsArrayList, player.getFirstName(), player.getLastName());
-            // if line contains last name but not first combine it with the last
+        for (int i = 1; i < splitLyricsArrayList.size(); i++) {
+            String previousString = splitLyricsArrayList.get(i - 1);
+            String lastWord = previousString.substring(previousString.lastIndexOf(" ") + 1);
+            char lastChar = lastWord.charAt(0);
+            String currentLine = splitLyricsArrayList.get(i);
+            if (Character.isUpperCase(lastChar)) {
+                String newString = previousString + " " + splitLyricsArrayList.get(i);
+                //System.out.println("NEW STRING: " + newString);
+                splitLyricsArrayList.set(i - 1, newString);
+                splitLyricsArrayList.remove(i);
+                i--;
+            } // if, if preceding line ends with a capital combine it with the last
+        } // for
             
-            for (int i = 1; i < splitLyricsArrayList.size(); i++) {
-            	String previousString = splitLyricsArrayList.get(i - 1);
-            	String lastWord = previousString.substring(previousString.lastIndexOf(" ")+  1);
-            	char lastChar = lastWord.charAt(0);
-            	String currentLine = splitLyricsArrayList.get(i);
-            	if (Character.isUpperCase(lastChar)) {
-            		String newString = previousString + " " + splitLyricsArrayList.get(i);
-            		//System.out.println("NEW STRING: " + newString);
-            		splitLyricsArrayList.set(i - 1, newString);
-            		splitLyricsArrayList.remove(i);
-            		i--;
-            	} // if, if preceding line ends with a capital combine it with the last
-            } // for
+        editLyricsArray(splitLyricsArrayList, "[", "]"); 
+        // if preceding line is a descriptor combine it with last
+        String playerName = (player.getFirstName() + " " + player.getLastName());
+        boolean containsName = false;
             
-            editLyricsArray(splitLyricsArrayList, "[", "]"); 
-            // if preceding line is a descriptor combine it with last
+        for (int i = 0; i < splitLyricsArrayList.size(); i++) {
+            String currentLyrics = splitLyricsArrayList.get(i);
+            if (currentLyrics.contains(playerName)) {
+                containsName = true;
+            } // if, if lyrics actually contain player name then return true
+        } // for
+        if (!containsName) {
+            player.getSongList().remove(song);
+            return false;
+        } else {
+            song.setLyrics(splitLyricsArrayList);
+            song.setParsed(true);
+        } // if, remove song if doesn't contain player name  
 
-            
-            String playerName = (player.getFirstName() + " " + player.getLastName());
-
-            
-            boolean containsName = false;
-            
-            for (int i = 0; i < splitLyricsArrayList.size(); i++) {
-            	String currentLyrics = splitLyricsArrayList.get(i);
-            	if (currentLyrics.contains(playerName)) {
-            		containsName = true;
-            	} // if, if lyrics actually contain player name then return true
-            } // for
-
-            
-            if (!containsName) {
-            	player.getSongList().remove(song);
-            	return false;
-            } 
-            else {
-            	song.setLyrics(splitLyricsArrayList);
-            	song.setParsed(true);
-            } // if, remove song if doesn't contain player name
-            
-
-            return true;
+        return true;
 
     } // search
     
@@ -145,9 +136,9 @@ public class HTMLScraperApi {
      * Updates {@code pb} with the given progress amount.
      * 
      * @param progress the given progress amount
+     * @param pb the ProgressBar to update
      */
     private static void updateProgress(final double progress, ProgressBar pb) {
-    	//System.out.println(progress);
         Platform.runLater(() -> pb.setProgress(progress));
     } // updateProgress
     
@@ -160,22 +151,23 @@ public class HTMLScraperApi {
      * @return condensed version of song lyrics
      */
     public static String getCondensedLyrics(NBAPlayer player, ArrayList<String> lyrics) {
-    	String condensedLyrics = "";
-    	String playerName = (player.getFirstName() + " " + player.getLastName());
-    	
-    	for (int i = 0; i < lyrics.size(); i++) {
-        	if (lyrics.get(i).contains(playerName)) {
-        		if (i > 0) {
-        			condensedLyrics = condensedLyrics + lyrics.get(i - 1);
-        		} // if, if index isn't first then add content of first index
-        		condensedLyrics = condensedLyrics + ("\n" + lyrics.get(i));
-        		if (i < (lyrics.size() - 1)) {
-        			condensedLyrics = condensedLyrics + ("\n" + lyrics.get(i + 1));
-        		} // if, if index isn't last then add content of first index
-        		break;
-        	} // if, if lyrics actually contain player name then return true
+
+        String condensedLyrics = "";
+        String playerName = (player.getFirstName() + " " + player.getLastName());
+
+        for (int i = 0; i < lyrics.size(); i++) {
+            if (lyrics.get(i).contains(playerName)) {
+                if (i > 0) {
+                    condensedLyrics = condensedLyrics + lyrics.get(i - 1);
+                } // if, if index isn't first then add content of first index
+                condensedLyrics = condensedLyrics + ("\n" + lyrics.get(i));
+                if (i < (lyrics.size() - 1)) {
+                    condensedLyrics = condensedLyrics + ("\n" + lyrics.get(i + 1));
+                } // if, if index isn't last then add content of first index
+                break;
+            } // if, if lyrics actually contain player name then return true
         } // for
-    	return condensedLyrics;
+        return condensedLyrics;
     }
     
     /**
@@ -188,15 +180,15 @@ public class HTMLScraperApi {
      */
     public static String censorString(String str, ArrayList<String> filterList) {
  
-    	String newStr = str; 
-    	for (int i = 0; i < filterList.size(); i++) {
-        	String swear = filterList.get(i);
-        	if (newStr.toLowerCase().contains(swear)) {
-        		newStr = newStr.replaceAll(("(?i)" + swear), "****");
-        	} // if
+        String newStr = str; 
+        for (int i = 0; i < filterList.size(); i++) {
+            String swear = filterList.get(i);
+            if (newStr.toLowerCase().contains(swear)) {
+                newStr = newStr.replaceAll(("(?i)" + swear), "****");
+            } // if
         } // for
-    	
-    	return newStr;
+       
+        return newStr;
     }
     
     /**
@@ -207,15 +199,16 @@ public class HTMLScraperApi {
      * 
      */
     private static void editLyricsArray(ArrayList<String> list, int length) {
-    	for (int i = 1; i < list.size(); i++) {
-        	String previousString = list.get(i - 1);
-        	if (previousString.length() < length) {
-        		String newString = previousString + " " + list.get(i);
-        		//System.out.println("NEW STRING: " + newString);
-        		list.set(i - 1, newString);
-        		list.remove(i);
-        		i--;
-        	} // if, if preceding line is too short combine it with the last
+
+        for (int i = 1; i < list.size(); i++) {
+            String previousString = list.get(i - 1);
+            if (previousString.length() < length) {
+                String newString = previousString + " " + list.get(i);
+                //System.out.println("NEW STRING: " + newString);
+                list.set(i - 1, newString);
+                list.remove(i);
+                i--;
+            } // if, if preceding line is too short combine it with the last
         } // for
     }
     
@@ -227,16 +220,17 @@ public class HTMLScraperApi {
      * @param nextContains what to check for the current lines
      * 
      */
-    private static void editLyricsArray(ArrayList<String> list, String prevContains, String nextContains) {
-    	for (int i = 1; i < list.size(); i++) {
-        	String previousString = list.get(i - 1);
-        	String currentLine = list.get(i);
-        	if (previousString.contains(prevContains) && currentLine.contains(nextContains)) {
-        		String newString = previousString + " " + list.get(i);
-        		list.set(i - 1, newString);
-        		list.remove(i);
-        		i--;
-        	} // if, if previous line and next line contain certain strings then combine them
+    private static void editLyricsArray(ArrayList<String> list, String prevContains
+        , String nextContains) {
+        for (int i = 1; i < list.size(); i++) {
+            String previousString = list.get(i - 1);
+            String currentLine = list.get(i);
+            if (previousString.contains(prevContains) && currentLine.contains(nextContains)) {
+                String newString = previousString + " " + list.get(i);
+                list.set(i - 1, newString);
+                list.remove(i);
+                i--;
+            } // if, if previous line and next line contain certain strings then combine them
         } // for
     }
   

@@ -13,57 +13,63 @@ import javafx.scene.text.FontWeight;
  *
  */
 public class TeamPages extends Pagination {
-	
-	WesternTeamPane westPane;
-	EasternTeamPane eastPane;
-	
-	/**
-     * Constructor. Uses the superclass {@code Pagination} constructor, then initializes its components.
+       
+    WesternTeamPane westPane;
+    EasternTeamPane eastPane;
+    
+    /**
+     * Constructor. Uses the superclass {@code Pagination} constructor.
+     * Then initializes its components.
      *
      */
-	public TeamPages() {
+    public TeamPages() {
 
-		super();
-		this.setPageCount(2);
-		
-		westPane = new WesternTeamPane();
-		eastPane = new EasternTeamPane();
-		
-		Label westTitleLabel = new Label("Western Conference");
-		westTitleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 30));
-		westTitleLabel.setTextFill(Paint.valueOf("Red"));
-		
-		Label eastTitleLabel = new Label("Eastern Conference");
-		eastTitleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 30));
-		eastTitleLabel.setTextFill(Paint.valueOf("Blue"));
-		
-		VBox pane1 = new VBox(westTitleLabel, westPane);
-		pane1.setSpacing(15);
-		pane1.setAlignment(Pos.CENTER);
-		
-		VBox pane2 = new VBox(eastTitleLabel, eastPane);
-		pane2.setSpacing(15);
-		pane2.setAlignment(Pos.CENTER);
-		
-		this.setPageFactory((pageIndex) -> { if (pageIndex == 0) return pane1; return pane2;});
-	}
-	
-	/**
+        super();
+        this.setPageCount(2);
+       
+        westPane = new WesternTeamPane();
+        eastPane = new EasternTeamPane();
+     
+        Label westTitleLabel = new Label("Western Conference");
+        westTitleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+        westTitleLabel.setTextFill(Paint.valueOf("Red"));
+     
+        Label eastTitleLabel = new Label("Eastern Conference");
+        eastTitleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+        eastTitleLabel.setTextFill(Paint.valueOf("Blue"));
+     
+        VBox pane1 = new VBox(westTitleLabel, westPane);
+        pane1.setSpacing(15);
+        pane1.setAlignment(Pos.CENTER);
+     
+        VBox pane2 = new VBox(eastTitleLabel, eastPane);
+        pane2.setSpacing(15);
+        pane2.setAlignment(Pos.CENTER);
+       
+        this.setPageFactory((pageIndex) -> {
+            if (pageIndex == 0) {
+                return pane1;
+                return pane2;
+            } // if
+        } );
+    }
+       
+    /**
      * Returns {@code westPane}.
      *
      * @return {@code westPane}
      */
-	public WesternTeamPane getWestPane() {
-		return westPane;
-	}
-	
-	/**
+    public WesternTeamPane getWestPane() {
+        return westPane;
+    }
+       
+    /**
      * Returns {@code eastPane}.
      *
      * @return {@code eastPane}
      */
-	public EasternTeamPane getEastPane() {
-		return eastPane;
-	}
+    public EasternTeamPane getEastPane() {
+        return eastPane;
+    }
 
 }

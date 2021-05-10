@@ -40,23 +40,23 @@ import cs1302.nbatools.TeamButton;
  */
 public class WesternTeamPane extends TilePane {
 	
-	private final TeamButton[] westernTeams = {
-			new TeamButton("file:resources/logos_western/mavericks.png", "Dallas Mavericks", 8, "mavericks"),
-		    new TeamButton("file:resources/logos_western/nuggets.png", "Denver Nuggets", 9, "nuggets"),
-		    new TeamButton("file:resources/logos_western/warriors.png", "Golden State Warriors", 11, "warriors"),
-		    new TeamButton("file:resources/logos_western/rockets.png", "Houston Rockets", 14, "rockets"),
-		    new TeamButton("file:resources/logos_western/clippers.png", "Los Angeles Clippers", 16, "clippers"),
-		    new TeamButton("file:resources/logos_western/lakers.png", "Los Angeles Lakers", 17, "lakers"),
-		    new TeamButton("file:resources/logos_western/grizzlies.png", "Memphis Grizzlies", 19, "grizzlies"),
-		    new TeamButton("file:resources/logos_western/timberwolves.png", "Minnesota Timberwolves", 22, "timberwolves"),
-		    new TeamButton("file:resources/logos_western/pelicans.png", "New Orleans Pelicans", 23, "pelicans"),
-		    new TeamButton("file:resources/logos_western/thunder.png", "OKC Thunder", 25, "thunder"),
-		    new TeamButton("file:resources/logos_western/suns.png", "Phoenix Suns", 28, "suns"),
-		    new TeamButton("file:resources/logos_western/trailblazers.png", "Portland Trail Blazers", 29, "trail blazers"),
-		    new TeamButton("file:resources/logos_western/kings.png", "Sacramento Kings", 30, "kings"),
-		    new TeamButton("file:resources/logos_western/spurs.png", "San Antonio Spurs", 31, "spurs"),
-		    new TeamButton("file:resources/logos_western/jazz.png", "Utah Jazz", 40, "jazz")};
-	// array of teamButtons for the western conference
+    private final TeamButton[] westernTeams = {
+        new TeamButton("file:resources/logos_western/mavericks.png", "Dallas Mavericks", 8, "mavericks"),
+        new TeamButton("file:resources/logos_western/nuggets.png", "Denver Nuggets", 9, "nuggets"),
+        new TeamButton("file:resources/logos_western/warriors.png", "Golden State Warriors", 11, "warriors"),
+        new TeamButton("file:resources/logos_western/rockets.png", "Houston Rockets", 14, "rockets"),
+        new TeamButton("file:resources/logos_western/clippers.png", "Los Angeles Clippers", 16, "clippers"),
+        new TeamButton("file:resources/logos_western/lakers.png", "Los Angeles Lakers", 17, "lakers"),
+        new TeamButton("file:resources/logos_western/grizzlies.png", "Memphis Grizzlies", 19, "grizzlies"),
+        new TeamButton("file:resources/logos_western/timberwolves.png", "Minnesota Timberwolves", 22, "timberwolves"),
+        new TeamButton("file:resources/logos_western/pelicans.png", "New Orleans Pelicans", 23, "pelicans"),
+        new TeamButton("file:resources/logos_western/thunder.png", "OKC Thunder", 25, "thunder"),
+        new TeamButton("file:resources/logos_western/suns.png", "Phoenix Suns", 28, "suns"),
+        new TeamButton("file:resources/logos_western/trailblazers.png", "Portland Trail Blazers", 29, "trail blazers"),
+        new TeamButton("file:resources/logos_western/kings.png", "Sacramento Kings", 30, "kings"),
+        new TeamButton("file:resources/logos_western/spurs.png", "San Antonio Spurs", 31, "spurs"),
+        new TeamButton("file:resources/logos_western/jazz.png", "Utah Jazz", 40, "jazz")};
+    // array of teamButtons for the western conference
     
     Label currentTeamLabel;
     Stage mainStage;
@@ -78,8 +78,8 @@ public class WesternTeamPane extends TilePane {
         this.setAlignment(Pos.CENTER);
         
         for (int i = 0; i < westernTeams.length; i++) {
-        	westernTeams[i].setOnMouseEntered(this::updateTeamLabelText);
-        	westernTeams[i].setOnAction(this::setConfirmScene);
+            westernTeams[i].setOnMouseEntered(this::updateTeamLabelText);
+            westernTeams[i].setOnAction(this::setConfirmScene);
             this.getChildren().add(westernTeams[i]);
         } // for, add all imageviews to this (TilePane)
    
@@ -118,10 +118,10 @@ public class WesternTeamPane extends TilePane {
     	TeamButton sourceImg = (TeamButton)e.getSource();
     	
     	if (mainStage != null) {
-    	ConfirmationBox confirmationBox = new ConfirmationBox(sourceImg, currentStageScene);
-    	confirmationBox.setMainStage(mainStage);
-    	Scene scene = new Scene(confirmationBox, 1280, 720);
-        Platform.runLater(() -> mainStage.setScene(scene));
+            ConfirmationBox confirmationBox = new ConfirmationBox(sourceImg, currentStageScene);
+            confirmationBox.setMainStage(mainStage);
+            Scene scene = new Scene(confirmationBox, 1280, 720);
+            Platform.runLater(() -> mainStage.setScene(scene));
     	}
     } // updateTeamLabelText
     
@@ -141,10 +141,10 @@ public class WesternTeamPane extends TilePane {
      * @param stage the given Stage
      */
     public void setMainStage(Stage mainStage) {
-		this.mainStage = mainStage;
-		currentStageScene = mainStage.getScene();
-		System.out.println(currentStageScene);
-	}
+        this.mainStage = mainStage;
+        currentStageScene = mainStage.getScene();
+        System.out.println(currentStageScene);
+    }
     
   
 }
