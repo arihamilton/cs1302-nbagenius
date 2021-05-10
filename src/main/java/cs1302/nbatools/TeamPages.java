@@ -49,8 +49,8 @@ public class TeamPages extends Pagination {
         this.setPageFactory((pageIndex) -> {
             if (pageIndex == 0) {
                 return pane1;
-                return pane2;
             } // if
+            return pane2;
         } );
     }
        
