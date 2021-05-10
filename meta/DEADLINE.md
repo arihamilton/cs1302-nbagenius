@@ -17,10 +17,13 @@ Markdown is transformed into nice looking HTML.
 * App Functions
   - This app gets an NBA team based on the user's choice,
   - then finds songs that use one of that team's players as a lyric.
-  - Upon opening the app, they will be able to pick an NBA team.
-  - The app then processes that team using the NBA Api, Genius API, and ScraperMonkey API (which gets the song's lyrics off of its Genius page).
+  - Upon opening the app, they will be able to pick an NBA team from a list of teams.
+  - The app then processes that team using the NBA Api, Genius API, and ScraperMonkey API.
+  - The NBA API returns a list of players that are on that team.
+  - The Genius API searches for songs that use those players as lyrics.
+  - Since the Genius API does not give us a song's lyrics, the ScraperMonkey API is used to scrape the lyrics off of the song's Genius page.
   - For each player on the roster, the app shows a list of songs that contain that player's full name.
-  - Then, the player can choose to select another team. 
+  - Then, the player can choose to select another team and repeat the whole process. 
                 
 
 ## Part 2: New
@@ -40,5 +43,5 @@ Markdown is transformed into nice looking HTML.
         
 * Retrospect
   - If I could start over, I would definitely spend more time researching APIs. The Genius API I have works, but it is very slow.
-  - Also, the Scraper API I use is decent, but it doesn't format a page's HTML very well.
-  - I would also research how to make my own API -- so I can have complete control over what kind of data I receive from a query.
+  - The Scraper API I use is decent, but it returns an unformatted version of a page's HTML, so I have to format it myself.
+  - I would also research how to make my own API, so I can have complete control over what kind of data I receive from a query.
