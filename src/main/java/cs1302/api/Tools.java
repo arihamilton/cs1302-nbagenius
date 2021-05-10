@@ -4,9 +4,14 @@ import static java.net.URLEncoder.encode;
 import static java.lang.String.format;
 
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublisher;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -85,6 +90,54 @@ public class Tools {
 
     } // getJson
 
+    /**
+     * Return a {@link JsonElement} for the JSON response from some URL.
+     * @param url URL of the desired JSON
+     * @param requestMethod HTTP request method to use (e.g., {@code "GET"}, {@code "POST"}, etc.)
+     * @param headers list of HTTP headers to use
+     * @return object for the desired JSON
+     * @throws IOException if something goes wrong with either the download
+     *                     or parsing of the JSON
+     */
+    /**
+     * @param postUrl
+     * @param requestMethod
+     * @param headers
+     * @return
+     * @throws IOException
+     */
+    @SafeVarargs
+	public static JsonElement getHttpJsonPOST(
+        String postUrl, String requestMethod, Pair<String, String>... headers) throws IOException {
+    	
+        URL location = new URL("https://scrapingmonkey.p.rapidapi.com/byClass");
+        URLConnection con = location.openConnection();
+        HttpURLConnection http = null;
+
+        if (con instanceof URLConnection) {
+            http = (HttpURLConnection) con;
+        } else {
+            throw new IOException("unsupported connection type: " + con.getClass());
+        } // if
+
+        http.setRequestMethod(requestMethod);
+        http.setDoOutput(true);
+        for (Pair<String, String> header : headers) {
+            http.setRequestProperty(header.getKey(), header.getValue());
+        } // for
+
+        OutputStream os = con.getOutputStream();
+        BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(os, "UTF-8"));
+        writer.write((postUrl));
+        writer.close();
+        // Code modified from https://stackoverflow.com/questions/9767952
+
+        InputStreamReader reader = new InputStreamReader(http.getInputStream());
+        return JsonParser.parseReader(reader);
+
+    } // getJson
+    
     /**
      * Return the {@link JsonElement} described by the {@code keys}.
      * Given a {@code JsonElement} that denotes a portion
