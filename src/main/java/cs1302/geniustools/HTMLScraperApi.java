@@ -34,15 +34,8 @@ import javafx.scene.image.Image;
 import javafx.util.Pair;
 
 /**
- * Example using Open Library Search API.
+ * Contains methods for ScraperMonkey API.
  *
- * <p>
- * To run this example on Odin, use the following commands:
- *
- * <pre>
- * $ mvn clean compile
- * $ mvn exec:java -Dexec.mainClass=cs1302.api.OpenLibrarySearchApi
- * </pre>
  */
 public class HTMLScraperApi {
 
@@ -87,10 +80,11 @@ public class HTMLScraperApi {
             
             fullLyrics = Normalizer.normalize(fullLyrics, Normalizer.Form.NFD);
             Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-            fullLyrics = pattern.matcher(fullLyrics).replaceAll("");
+            fullLyrics = pattern.matcher(fullLyrics).replaceAll("");      
             // Code retrieved from https://stackoverflow.com/questions/1008802, strips accents
-            
-            if (song.getArtistName().equals("Beast Coast")) System.out.println(fullLyrics);
+
+            fullLyrics = fullLyrics.replace("&quot;", "\"");
+            fullLyrics = fullLyrics.replace("&amp;", "&");
 
             String[] splitLyrics = fullLyrics.split("\\s(?=[A-Z])");
             List<String> splitLyricsList = Arrays.asList(splitLyrics);
@@ -119,7 +113,7 @@ public class HTMLScraperApi {
             editLyricsArray(splitLyricsArrayList, "[", "]"); 
             // if preceding line is a descriptor combine it with last
 
-           
+            
             String playerName = (player.getFirstName() + " " + player.getLastName());
 
             
