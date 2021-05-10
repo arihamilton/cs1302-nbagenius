@@ -39,20 +39,29 @@ import cs1302.nbatools.TeamButton;
  *
  */
 public class WesternTeamPane extends TilePane {
-	
+       
     private final TeamButton[] westernTeams = {
-        new TeamButton("file:resources/logos_western/mavericks.png", "Dallas Mavericks", 8, "mavericks"),
+        new TeamButton("file:resources/logos_western/mavericks.png", "Dallas Mavericks"
+            , 8, "mavericks"),
         new TeamButton("file:resources/logos_western/nuggets.png", "Denver Nuggets", 9, "nuggets"),
-        new TeamButton("file:resources/logos_western/warriors.png", "Golden State Warriors", 11, "warriors"),
-        new TeamButton("file:resources/logos_western/rockets.png", "Houston Rockets", 14, "rockets"),
-        new TeamButton("file:resources/logos_western/clippers.png", "Los Angeles Clippers", 16, "clippers"),
-        new TeamButton("file:resources/logos_western/lakers.png", "Los Angeles Lakers", 17, "lakers"),
-        new TeamButton("file:resources/logos_western/grizzlies.png", "Memphis Grizzlies", 19, "grizzlies"),
-        new TeamButton("file:resources/logos_western/timberwolves.png", "Minnesota Timberwolves", 22, "timberwolves"),
-        new TeamButton("file:resources/logos_western/pelicans.png", "New Orleans Pelicans", 23, "pelicans"),
+        new TeamButton("file:resources/logos_western/warriors.png", "Golden State Warriors"
+            , 11, "warriors"),
+        new TeamButton("file:resources/logos_western/rockets.png", "Houston Rockets", 14
+            , "rockets"),
+        new TeamButton("file:resources/logos_western/clippers.png", "Los Angeles Clippers"
+            , 16, "clippers"),
+        new TeamButton("file:resources/logos_western/lakers.png", "Los Angeles Lakers"
+            , 17, "lakers"),
+        new TeamButton("file:resources/logos_western/grizzlies.png", "Memphis Grizzlies"
+            , 19, "grizzlies"),
+        new TeamButton("file:resources/logos_western/timberwolves.png", "Minnesota Timberwolves"
+            , 22, "timberwolves"),
+        new TeamButton("file:resources/logos_western/pelicans.png", "New Orleans Pelicans"
+            , 23, "pelicans"),
         new TeamButton("file:resources/logos_western/thunder.png", "OKC Thunder", 25, "thunder"),
         new TeamButton("file:resources/logos_western/suns.png", "Phoenix Suns", 28, "suns"),
-        new TeamButton("file:resources/logos_western/trailblazers.png", "Portland Trail Blazers", 29, "trail blazers"),
+        new TeamButton("file:resources/logos_western/trailblazers.png", "Portland Trail Blazers"
+            , 29, "trail blazers"),
         new TeamButton("file:resources/logos_western/kings.png", "Sacramento Kings", 30, "kings"),
         new TeamButton("file:resources/logos_western/spurs.png", "San Antonio Spurs", 31, "spurs"),
         new TeamButton("file:resources/logos_western/jazz.png", "Utah Jazz", 40, "jazz")};
@@ -63,7 +72,8 @@ public class WesternTeamPane extends TilePane {
     Scene currentStageScene;
  
     /**
-     * Constructor. Uses the superclass {@code TilePane} constructor, then initializes its components.
+     * Constructor. Uses the superclass {@code TilePane} constructor.
+     * Then initializes its components.
      *
      */
     public WesternTeamPane() {
@@ -105,7 +115,7 @@ public class WesternTeamPane extends TilePane {
      * @param e source event
      */
     private void updateTeamLabelText(MouseEvent e) {
-    	TeamButton sourceImg = (TeamButton)e.getSource();
+        TeamButton sourceImg = (TeamButton)e.getSource();
         Platform.runLater(() -> currentTeamLabel.setText(sourceImg.getTeamName()));
     } // updateTeamLabelText
     
@@ -115,14 +125,14 @@ public class WesternTeamPane extends TilePane {
      * @param e source event
      */
     private void setConfirmScene(ActionEvent e) {
-    	TeamButton sourceImg = (TeamButton)e.getSource();
-    	
-    	if (mainStage != null) {
+        TeamButton sourceImg = (TeamButton)e.getSource();
+       
+        if (mainStage != null) {
             ConfirmationBox confirmationBox = new ConfirmationBox(sourceImg, currentStageScene);
             confirmationBox.setMainStage(mainStage);
             Scene scene = new Scene(confirmationBox, 1280, 720);
             Platform.runLater(() -> mainStage.setScene(scene));
-    	}
+        }
     } // updateTeamLabelText
     
 
@@ -138,7 +148,7 @@ public class WesternTeamPane extends TilePane {
     /** 
      * Sets {@code mainStage} to the given Stage.
      * 
-     * @param stage the given Stage
+     * @param mainStage the given Stage
      */
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
