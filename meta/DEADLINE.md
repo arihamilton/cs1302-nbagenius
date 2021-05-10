@@ -17,7 +17,6 @@ Markdown is transformed into nice looking HTML.
 * App Functions
   - This app gets an NBA team based on the user's choice,
   - then finds songs that use one of that team's players as a lyric.
-  -
   - Upon opening the app, they will be able to pick an NBA team.
   - The app then processes that team using the NBA Api, Genius API, and ScraperMonkey API (which gets the song's lyrics off of its Genius page).
   - For each player on the roster, the app shows a list of songs that contain that player's full name.
